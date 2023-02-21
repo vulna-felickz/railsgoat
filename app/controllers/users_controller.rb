@@ -22,6 +22,12 @@ class UsersController < ApplicationController
   def account_settings
     @user = current_user
   end
+  
+  def delete
+    message = false
+    
+    user = ActiveRecord::Base.connection.execute("DELETE FROM users WHERE id = '#{params[:user][:id]}'")[0]
+  end
 
   def update
     message = false

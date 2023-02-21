@@ -24,8 +24,7 @@ class UsersController < ApplicationController
   end
   
   def delete
-    message = false
-    
+    message = false    
     user = ActiveRecord::Base.connection.execute("DELETE FROM users WHERE id = '#{params[:user][:id]}'")[0]
   end
 

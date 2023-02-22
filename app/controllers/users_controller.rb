@@ -27,6 +27,12 @@ class UsersController < ApplicationController
     message = false    
     user = ActiveRecord::Base.connection.execute("DELETE FROM users WHERE id = '#{params[:user][:id]}'")[0]
   end
+  
+    
+  def delete2
+    message = false    
+    user = Core::PropertyList.find_by_sql("SELECT * FROM users WHERE id = '#{params[:user][:id]}'")[0]
+  end
 
   def update
     message = false

@@ -22,6 +22,17 @@ class UsersController < ApplicationController
   def account_settings
     @user = current_user
   end
+  
+  def delete
+    message = false    
+    user = ActiveRecord::Base.connection.execute("DELETE FROM users WHERE id = '#{params[:user][:id]}'")[0]
+  end
+  
+    
+  def delete2
+    message = false    
+    user = Core::PropertyList.find_by_sql("SELECT * FROM users WHERE id = '#{params[:user][:id]}'")[0]
+  end
 
   def update
     message = false
@@ -43,6 +54,29 @@ class UsersController < ApplicationController
       redirect_to user_account_settings_path(user_id: current_user.id)
     end
   end
+  
+  
+  def update2
+    message = false
+
+    user = User.where("id = '#{params[:user][:id]}'")[0]
+
+    if user
+      user.update(user_params_without_password)
+      if params[:user][:password].present? && (params[:user][:password] == params[:user][:password_confirmation])
+        user.password = params[:user][:password]
+      end
+      message = true if user.save!
+      respond_to do |format|
+        format.html { redirect_to user_account_settings_path(user_id: current_user.id) }
+        format.json { render json: {msg: message ? "success" : "false "} }
+      end
+    else
+      flash[:error] = "Could not update user!"
+      redirect_to user_account_settings_path(user_id: current_user.id)
+    end
+  end
+  
 
   private
 
